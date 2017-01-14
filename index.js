@@ -4,7 +4,7 @@ const Twitter = require( "twitter" ),
       CONFIG  = require( "./config" ),
       Tweet   = require( "./tweet" );
 
-const client = new Twitter( CONFIG );
+const client = new Twitter( CONFIG.twitter );
 var params = { screen_name: "Rakuten_Panda" };
 
 client
