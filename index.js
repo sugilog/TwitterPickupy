@@ -10,13 +10,11 @@ var params = { screen_name: "Rakuten_Panda" };
 client
   .get( "statuses/user_timeline", params )
   .then( ( tweets ) => {
-    // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Math/random
-    let index = Math.floor( Math.random() * tweets.length ),
-        tweet = tweets[ index ];
-
-    console.log( Tweet.userName( tweet ) );
-    console.log( Tweet.text( tweet ) );
-    console.log( Tweet.extra( tweet ) );
+    tweets.forEach( ( tweet ) => {
+      console.log( Tweet.userName( tweet ) );
+      console.log( Tweet.text( tweet ) );
+      console.log( Tweet.extra( tweet ) );
+    });
   })
   .catch( ( errors ) => {
     if ( typeof errors.forEach === "function" ) {
