@@ -9,20 +9,24 @@ provider:
   runtime: nodejs4.3
   stage: production
   region: ap-northeast-1
+  environment:
+    TWITTER_CONSUMER_KEY: ${env:TWITTER_CONSUMER_KEY}
+    TWITTER_CONSUMER_SECRET: ${env:TWITTER_CONSUMER_SECRET}
+    TWITTER_ACCESS_TOKEN_KEY: ${env:TWITTER_ACCESS_TOKEN_KEY}
+    TWITTER_ACCESS_TOKEN_SECRET: ${env:TWITTER_ACCESS_TOKEN_SECRET}
 
-# you can define service wide environment variables here
-#  environment:
-#    variable1: value1
-
-# you can add packaging information here
-#package:
+package:
 #  include:
 #    - include-me.js
 #    - include-me-dir/**
-#  exclude:
-#    - exclude-me.js
-#    - exclude-me-dir/**
+  exclude:
+    - .git
+    - .envrc
 
 functions:
-  hello:
+  twitter:
     handler: handler.twitter
+    events:
+      - http:
+          method: get
+          path: twitter
