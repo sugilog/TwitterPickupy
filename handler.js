@@ -1,16 +1,12 @@
-'use strict';
+"use strict";
+const fetcher = require( "./fetcher" );
 
-module.exports.hello = (event, context, callback) => {
-  const response = {
-    statusCode: 200,
-    body: JSON.stringify({
-      message: 'Go Serverless v1.0! Your function executed successfully!',
-      input: event,
-    }),
-  };
-
-  callback(null, response);
-
-  // Use this code if you don't use the http event with the LAMBDA-PROXY integration
-  // callback(null, { message: 'Go Serverless v1.0! Your function executed successfully!', event });
+module.exports.twitter = ( event, context, callback ) => {
+  fetcher( "Rakuten_Panda" )
+    .then( ( results ) => {
+      callback( null, { statusCode: 200, body: JSON.stringify( { results: results, input: event } ) } );
+    })
+    .catch( ( errors ) => {
+      callback( null, { statusCode: 500, body: JSON.stringify( { errors: errors, input: event } ) } );
+    });
 };
