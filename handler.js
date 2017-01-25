@@ -1,4 +1,5 @@
 "use strict";
+
 const fetcher = require( "./fetcher" );
 
 module.exports.twitter = ( event, context, callback ) => {
@@ -10,3 +11,13 @@ module.exports.twitter = ( event, context, callback ) => {
       callback( null, { statusCode: 500, body: JSON.stringify( { errors: errors, input: event } ) } );
     });
 };
+
+module.exports.line = ( event, context, callback ) => {
+  const account = ""
+
+  fetcher( account )
+    .then( ( results ) => {
+    })
+    .catch( ( errors ) => {
+    });
+});

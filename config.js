@@ -5,6 +5,11 @@ const TWITTER = {
   access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 };
 
+const LINE = {
+  ChannelAccessToken: process.env.LINE_CHANNEL_ACCESS_TOKEN
+}
+
 module.exports = {
-  twitter: TWITTER
+  twitter: TWITTER,
+  LINE: LINE
 }
