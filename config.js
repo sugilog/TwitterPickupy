@@ -1,8 +1,8 @@
 const TWITTER = {
-  consumer_key:        process.env.TWITTER_CONSUMER_KEY,
-  consumer_secret:     process.env.TWITTER_CONSUMER_SECRET,
-  access_token_key:    process.env.TWITTER_ACCESS_TOKEN_KEY,
-  access_token_secret: process.env.TWITTER_ACCESS_TOKEN_SECRET
+  ConsumerKey:       process.env.TWITTER_CONSUMER_KEY,
+  ConsumerSecret:    process.env.TWITTER_CONSUMER_SECRET,
+  AccessTokenKey:    process.env.TWITTER_ACCESS_TOKEN_KEY,
+  AccessTokenSecret: process.env.TWITTER_ACCESS_TOKEN_SECRET
 };
 
 const LINE = {
@@ -10,6 +10,6 @@ const LINE = {
 }
 
 module.exports = {
-  twitter: TWITTER,
+  TWITTER: TWITTER,
   LINE: LINE
 }

@@ -4,7 +4,12 @@ const Twitter = require( "twitter" ),
       CONFIG  = require( "./config" ),
       Tweet   = require( "./tweet" );
 
-const client = new Twitter( CONFIG.twitter );
+const client = new Twitter( {
+  consumer_key:        CONFIG.TWITTER.ConsumerKey,
+  consumer_secret:     CONFIG.TWITTER.ConsumerSecret,
+  access_token_key:    CONFIG.TWITTER.AccessTokenKey,
+  access_token_secret: CONFIG.TWITTER.AccessTokenSecret
+});
 
 const fetcher = ( screenName ) => {
   let params = { screen_name: screenName };
