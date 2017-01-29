@@ -11,8 +11,21 @@ const client = new Twitter( {
   access_token_secret: CONFIG.TWITTER.AccessTokenSecret
 });
 
+const sanitizeScreenName = ( screenName ) => {
+  var account;
+
+  if ( screenName.indexOf( "@" ) === 0 ) {
+    account = screenName.replace( /^@/, "" );
+  }
+  else if ( screenName.indexOf( "twitter.com/" ) > -1 ) {
+    account = screenName.replace( /^.*twitter\.com\//, "" );
+  }
+
+  return account.split( /\s/ )[ 0 ]
+}
+
 const fetcher = ( screenName ) => {
-  let params = { screen_name: screenName };
+  let params = { screen_name: sanitizeScreenName( screenName ) };
 
   return client
     .get( "statuses/user_timeline", params )
