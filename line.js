@@ -1,13 +1,14 @@
 "use strict";
 
 const https       = require( "https" ),
-      querystring = require( "querystring" ),
-      CONFIG      = require( "./config" );
+      CONFIG      = require( "./config" ),
+      CAROUSEL_LIMIT = 5,
+      TEXT_LIMIT     = 60;
 
 const reply = ( message, replyToken ) => {
-  const postData = querystring.stringify( {
+  const postData = JSON.stringify( {
           replyToken: replyToken,
-          messages:   message
+          messages:   [ message ]
         }),
         options = {
           hostname: "api.line.me",
@@ -23,20 +24,30 @@ const reply = ( message, replyToken ) => {
 
   return new Promise( ( resolve, reject ) => {
     let request = https.request( options, ( response ) => {
-      if ( response.statusCode === 200 ) {
-        resolve( {
-          success:    true,
-          statusCode: response.statusCode,
-          headers:    response.headers
-        });
-      }
-      else {
-        reject( {
-          success:    false,
-          statusCode: response.statusCode,
-          headers:    response.headers
-        });
-      }
+      let body = ""
+
+      response.on( "data", ( data ) => {
+        body += data;
+      });
+
+      response.on( "end", () => {
+        if ( response.statusCode === 200 ) {
+          resolve( {
+            success:    true,
+            statusCode: response.statusCode,
+            headers:    response.headers,
+            body:       body
+          });
+        }
+        else {
+          reject( {
+            success:    false,
+            statusCode: response.statusCode,
+            headers:    response.headers,
+            body:       body
+          });
+        }
+      });
     });
 
     request.on( "error", ( error ) => {
@@ -51,6 +62,61 @@ const reply = ( message, replyToken ) => {
   });
 };
 
+const carousel = ( tweets ) => {
+  const hasPhoto = ( tweet ) => {
+    return (
+      tweet.extra.photo &&
+      tweet.extra.photo[ 0 ]
+    );
+  };
+
+  const limitedText = ( tweet ) => {
+    const suffix = "...",
+          limit  = TEXT_LIMIT - suffix.length;
+
+    if ( tweet.text.length < limit ) {
+      return tweet.text;
+    }
+    else {
+      return tweet.text.split( "" ).splice(0, limit).join( "" ) + suffix;
+    }
+  }
+
+  const accountURL = ( tweet ) => {
+    const prefix = "https://twitter.com/";
+    let   nameParts = tweet.userName.split( "@" );
+
+    return prefix + nameParts[ nameParts.length - 1 ];
+  }
+
+  let columns = [];
+
+  tweets.forEach( ( tweet, index ) => {
+    if ( index < CAROUSEL_LIMIT && hasPhoto( tweet ) ) {
+      columns.push( {
+        thumbnailImageUrl: tweet.extra.photo[ 0 ],
+        title:   tweet.userName,
+        text:    limitedText( tweet ),
+        actions: [ {
+          type:  "uri",
+          label: "View detail",
+          uri:   accountURL( tweet )
+        }]
+      });
+    }
+  });
+
+  return {
+    type:     "template",
+    altText:  "Twitter Tweets",
+    template: {
+      type:    "carousel",
+      columns: columns
+    }
+  };
+};
+
 module.exports = {
-  reply: reply
+  reply:    reply,
+  carousel: carousel
 }

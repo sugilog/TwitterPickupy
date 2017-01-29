@@ -14,6 +14,7 @@ provider:
     TWITTER_CONSUMER_SECRET: ${env:TWITTER_CONSUMER_SECRET}
     TWITTER_ACCESS_TOKEN_KEY: ${env:TWITTER_ACCESS_TOKEN_KEY}
     TWITTER_ACCESS_TOKEN_SECRET: ${env:TWITTER_ACCESS_TOKEN_SECRET}
+    LINE_CHANNEL_ACCESS_TOKEN: ${env:LINE_CHANNEL_ACCESS_TOKEN}
 
 package:
 #  include:
@@ -30,3 +31,9 @@ functions:
       - http:
           method: get
           path: twitter
+  line:
+    handler: handler.line
+    events:
+      - http:
+          method: post
+          path: line
