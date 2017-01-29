@@ -71,14 +71,20 @@ const carousel = ( tweets ) => {
         thumbnailImageUrl: ( tweet.hasPhoto() ? tweet.photo[ 0 ] : "https://s3-ap-northeast-1.amazonaws.com/sugilog/serverless-resources/Twitter_Logo_White_On_Blue.png" ),
         title:   tweet.userName,
         text:    tweet.shortText( TEXT_LIMIT ),
-        actions: [ {
-          type:  "uri",
-          label: "View detail",
-          uri:   tweet.accountURL()
-        }]
+        actions: [
+          {
+            type:  "uri",
+            label: "View Tweet",
+            uri:   tweet.entryURL()
+          },
+          {
+            type:  "uri",
+            label: `View ${ tweet.screenName }`,
+            uri:   tweet.accountURL()
+          }
+        ]
       };
 
-      console.dir( message, { depth: null } );
       columns.push( message );
     }
   });

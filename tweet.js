@@ -2,7 +2,10 @@
 
 class Tweet {
   constructor( entry ) {
+    // console.dir( entry, { depth: null } );
     let media = Tweet.toMedia( entry );
+    // DO NOT use id for status url.
+    this.id = entry.id_str;
     this.userName = Tweet.toUserName( entry );
     this.screenName = entry.user.screen_name;
     this.text = Tweet.toText( entry );
@@ -24,6 +27,10 @@ class Tweet {
     else {
       return this.text.split( "" ).splice( 0, spliceLimit ).join( "" ) + suffix;
     }
+  }
+
+  entryURL() {
+    return `${ this.accountURL() }/status/${ this.id }`;
   }
 
   accountURL() {
