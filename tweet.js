@@ -37,7 +37,7 @@ const media = ( tweet ) => {
 };
 
 const hasMedia = ( tweet ) => {
-  return tweet.entities.media.length > 0;
+  return tweet.entities.media && tweet.entities.media.length > 0;
 };
 
 const hashtags = ( tweet ) => {

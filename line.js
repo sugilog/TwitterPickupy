@@ -92,9 +92,9 @@ const carousel = ( tweets ) => {
   let columns = [];
 
   tweets.forEach( ( tweet, index ) => {
-    if ( index < CAROUSEL_LIMIT && hasPhoto( tweet ) ) {
-      columns.push( {
-        thumbnailImageUrl: tweet.extra.photo[ 0 ],
+    if ( index < CAROUSEL_LIMIT ) {
+      let message = {
+        thumbnailImageUrl: ( hasPhoto( tweet ) ? tweet.extra.photo[ 0 ] : "https://s3-ap-northeast-1.amazonaws.com/sugilog/serverless-resources/Twitter_Logo_White_On_Blue.png" ),
         title:   tweet.userName,
         text:    limitedText( tweet ),
         actions: [ {
@@ -102,7 +102,10 @@ const carousel = ( tweets ) => {
           label: "View detail",
           uri:   accountURL( tweet )
         }]
-      });
+      };
+
+      console.dir( message, { depth: null } );
+      columns.push( message );
     }
   });
 
