@@ -1,60 +1,80 @@
 "use strict";
 
-const userName = ( tweet ) => {
-  return `${ tweet.user.name } @${ tweet.user.screen_name }`;
-};
-
-const text = ( tweet ) => {
-  let text = tweet.text;
-
-  if ( hasMedia( tweet ) ) {
-    tweet.entities.media.forEach( ( media ) => {
-      text = text.replace( media.url, "" );
-    });
+class Tweet {
+  constructor( entry ) {
+    let media = Tweet.toMedia( entry );
+    this.userName = Tweet.toUserName( entry );
+    this.screenName = entry.user.screen_name;
+    this.text = Tweet.toText( entry );
+    this.photo = media.photo;
+    this.hashTags = Tweet.toHashTags( entry );
   }
 
-  return text.trim();
-};
+  hasPhoto() {
+    return this.photo && this.photo[ 0 ];
+  };
 
-const extra = ( tweet ) => {
-  return Object.assign(
-    {},
-    media( tweet ),
-    hashtags( tweet )
-  );
-};
-const media = ( tweet ) => {
-  let set = {};
+  shortText( limit ) {
+    const suffix = "...",
+          spliceLimit = limit - suffix.length;
 
-  if ( hasMedia( tweet ) ) {
-    tweet.entities.media.forEach( ( media ) => {
-      set[ media.type ] = set[ media.type ] || [];
-      set[ media.type ].push( media.media_url_https );
-    });
+    if ( this.text.length < limit ) {
+      return this.text;
+    }
+    else {
+      return this.text.split( "" ).splice( 0, spliceLimit ).join( "" ) + suffix;
+    }
   }
 
-  return set;
-};
-
-const hasMedia = ( tweet ) => {
-  return tweet.entities.media && tweet.entities.media.length > 0;
-};
-
-const hashtags = ( tweet ) => {
-  if ( tweet.entities.hashtags.length > 0 ) {
-    return {
-      hashtags: tweet.entities.hashtags.map( ( hashtag ) => {
-        return `#${ hashtag.text }`;
-      })
-    };
+  accountURL() {
+    return `https://twitter.com/${ this.screenName }`;
   }
-  else {
-    return {}
-  }
-};
 
-module.exports = {
-  userName: userName,
-  text:     text,
-  extra:    extra
+  static toUserName( entry ) {
+    return `${ entry.user.name } @${ entry.user.screen_name }`;
+  }
+
+  static toText( entry ) {
+    let text = entry.text;
+
+    if ( Tweet.hasMedia( entry ) ) {
+      entry.entities.media.forEach( ( media ) => {
+        text = text.replace( media.url, "" );
+      });
+    }
+
+    return text.trim();
+  }
+
+  static toMedia( entry ) {
+    let set = {};
+
+    if ( Tweet.hasMedia( entry ) ) {
+      entry.entities.media.forEach( ( media ) => {
+        set[ media.type ] = set[ media.type ] || [];
+        set[ media.type ].push( media.media_url_https );
+      });
+    }
+
+    return set;
+  };
+
+  static hasMedia( entry ) {
+    return entry.entities.media && entry.entities.media.length > 0;
+  }
+
+  static toHashTags( entry ) {
+    if ( entry.entities.hashtags.length > 0 ) {
+      return {
+        hashtags: entry.entities.hashtags.map( ( hashtag ) => {
+          return `#${ hashtag.text }`;
+        })
+      };
+    }
+    else {
+      return {}
+    }
+  };
 }
+
+module.exports = Tweet;

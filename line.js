@@ -63,44 +63,18 @@ const reply = ( message, replyToken ) => {
 };
 
 const carousel = ( tweets ) => {
-  const hasPhoto = ( tweet ) => {
-    return (
-      tweet.extra.photo &&
-      tweet.extra.photo[ 0 ]
-    );
-  };
-
-  const limitedText = ( tweet ) => {
-    const suffix = "...",
-          limit  = TEXT_LIMIT - suffix.length;
-
-    if ( tweet.text.length < limit ) {
-      return tweet.text;
-    }
-    else {
-      return tweet.text.split( "" ).splice(0, limit).join( "" ) + suffix;
-    }
-  }
-
-  const accountURL = ( tweet ) => {
-    const prefix = "https://twitter.com/";
-    let   nameParts = tweet.userName.split( "@" );
-
-    return prefix + nameParts[ nameParts.length - 1 ];
-  }
-
   let columns = [];
 
   tweets.forEach( ( tweet, index ) => {
     if ( index < CAROUSEL_LIMIT ) {
       let message = {
-        thumbnailImageUrl: ( hasPhoto( tweet ) ? tweet.extra.photo[ 0 ] : "https://s3-ap-northeast-1.amazonaws.com/sugilog/serverless-resources/Twitter_Logo_White_On_Blue.png" ),
+        thumbnailImageUrl: ( tweet.hasPhoto() ? tweet.photo[ 0 ] : "https://s3-ap-northeast-1.amazonaws.com/sugilog/serverless-resources/Twitter_Logo_White_On_Blue.png" ),
         title:   tweet.userName,
-        text:    limitedText( tweet ),
+        text:    tweet.shortText( TEXT_LIMIT ),
         actions: [ {
           type:  "uri",
           label: "View detail",
-          uri:   accountURL( tweet )
+          uri:   tweet.accountURL()
         }]
       };
 

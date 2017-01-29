@@ -31,12 +31,8 @@ const fetcher = ( screenName ) => {
     .get( "statuses/user_timeline", params )
     .then( ( tweets ) => {
       return new Promise( ( resolve ) => {
-        let results = tweets.map( ( tweet ) => {
-          return {
-            userName: Tweet.userName( tweet ),
-            text:     Tweet.text( tweet ),
-            extra:    Tweet.extra( tweet )
-          }
+        let results = tweets.map( ( entry ) => {
+          return new Tweet( entry );
         });
 
         resolve( results );
