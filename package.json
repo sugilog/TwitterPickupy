@@ -9,6 +9,7 @@
   "author": "Takayuki Sugita",
   "license": "ISC",
   "dependencies": {
+    "serverless": "^1.27.2",
     "twitter": "^1.7.0"
   }
 }
