@@ -20,6 +20,9 @@ const sanitizeScreenName = ( screenName ) => {
   else if ( screenName.indexOf( "twitter.com/" ) > -1 ) {
     account = screenName.replace( /^.*twitter\.com\//, "" );
   }
+  else {
+    account = screenName;
+  }
 
   return account.split( /\s/ )[ 0 ]
 }
